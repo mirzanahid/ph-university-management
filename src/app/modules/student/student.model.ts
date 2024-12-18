@@ -1,5 +1,4 @@
 import { Schema, model } from 'mongoose';
-
 import {
   StudentModel,
   TGuardian,
@@ -134,7 +133,11 @@ const studentSchema = new Schema<TStudent, StudentModel>(
     profileImg: { type: String },
     admissionSemester: {
       type: Schema.Types.ObjectId,
-      ref: "AcademicSemester"
+      ref: 'AcademicSemeseter',
+    },
+    academicDepartment: {
+      type: Schema.Types.ObjectId,
+      ref: 'AcademicDepartment',
     },
     isDeleted: {
       type: Boolean,
@@ -166,16 +169,32 @@ studentSchema.pre('findOne', function (next) {
 
 // [ {$match: { isDeleted : {  $ne: : true}}}   ,{ '$match': { id: '123456' } } ]
 
-studentSchema.pre('aggregate', function (next) {
-  this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
-  next();
-});
+// studentSchema.pre('aggregate', function (next) {
+//   this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
+//   next();
+// });
 
-//creating a custom static method
+// creating a custom static method
 studentSchema.statics.isUserExists = async function (id: string) {
   const existingUser = await Student.findOne({ id });
   return existingUser;
 };
+
+
+// studentSchema.pre('findOneAndUpdate', async function (next) {
+//   const query = this.getQuery();
+//   const isStudentExist = await Student.findOne(query);
+//   if (!isStudentExist) {
+//     console.log(isStudentExist)
+//     throw new AppError(httpStatus.BAD_REQUEST,'This student is not exist!');
+//   }
+//   next();
+// });
+
+
+
+
+
 
 //creating a custom instance method
 // studentSchema.methods.isUserExists = async function (id: string) {

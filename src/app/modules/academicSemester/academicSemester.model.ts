@@ -5,6 +5,7 @@ import {
   academicSemeseterName,
   months,
 } from './academicSemster.constant';
+import AppError from '../../errors/AppError';
 
 const academicSemesterSchema = new Schema<TAcademicSemester>(
   {
@@ -50,6 +51,23 @@ academicSemesterSchema.pre('save', async function(next) {
     }
     next()
 })
+
+
+academicSemesterSchema.pre('findOneAndUpdate', async function (next) {
+  const query = this.getQuery();
+
+  const isDepartmentExist = await AcademicSemester.findOne(query);
+
+  if (!isDepartmentExist) {
+    throw new AppError(404,'This Faculty is not exist!');
+  }
+
+  next();
+});
+
+
+
+
 
 
 
