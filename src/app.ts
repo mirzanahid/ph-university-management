@@ -20,7 +20,15 @@ const getAController = (req: Request, res: Response) => {
 
 app.get('/', getAController);
 
+const test = async (req: Request, res: Response) => {
+  const a = 10;
+  res.send(a);
+};
+
+app.get('/', test);
+
 app.use(globalErrorHandler);
 
 app.use(notFound);
+
 export default app;
